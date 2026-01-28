@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion'; // Khallitha framer-motion khaterha standard
 import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
 
-// --- Soda Logos (Original Assets) ---
-import cocaColaLogo from 'figma:asset/948a3e230a353d2b1fafedc42648d3f58a98d5d1.png';
-import fantaLogo from 'figma:asset/f1afcb97e37137631066abcf09972326feb9fd17.png';
-import spriteLogo from 'figma:asset/648835a2912b9f831578debb5e191dc2c0008afb.png';
+// --- Soda Logos (Mel dossier assets mte3ek) ---
+import cocaColaLogo from '../assets/KO.png';
+import fantaLogo from '../assets/fanta.png';
+import spriteLogo from '../assets/sprite.png';
 
 // --- Jus Logos ---
-import cassiseLogo from 'figma:asset/cassise.png';
-import pechePassionLogo from 'figma:asset/peche_passion.png';
-import pastequeLogo from 'figma:asset/pasteque.png';
-import citronLogo from 'figma:asset/citron.png';
+import cassiseLogo from '../assets/cassise.png';
+import pechePassionLogo from '../assets/peche_passion.png';
+import pastequeLogo from '../assets/pasteque.png';
+import citronLogo from '../assets/citron.png';
 
 type BeverageType = 'water' | 'fanta' | 'coca' | 'sprite' | 'cassise' | 'peche_passion' | 'pasteque' | 'citron_jus' | null;
 
@@ -35,15 +35,13 @@ const beverageConfigs: Record<Exclude<BeverageType, null>, BeverageConfig> = {
   citron_jus: { name: 'Citron / Citron Vert', logo: citronLogo, liquidGradient: 'bg-gradient-to-t from-lime-500 to-yellow-300', shadowColor: '0 0 20px rgba(101, 163, 13, 0.4)', streamGradient: 'linear-gradient(to bottom, #65a30d, #bef264)', hasBubbles: false },
 };
 
-interface IceCube { id: number; delay: number; x: number; y: number; rotation: number; size: number; }
-
 export function SmartDispenser() {
   const [selectedBeverage, setSelectedBeverage] = useState<BeverageType>(null);
   const [isDispensing, setIsDispensing] = useState(false);
   const [fillLevel, setFillLevel] = useState(0);
   const [addIce, setAddIce] = useState(false);
   const [addLemon, setAddLemon] = useState(false);
-  const [iceCubes, setIceCubes] = useState<IceCube[]>([]);
+  const [iceCubes, setIceCubes] = useState<any[]>([]);
   const [menuView, setMenuView] = useState<'main' | 'soda' | 'jus'>('main');
   const [isFull, setIsFull] = useState(false);
 
@@ -78,16 +76,12 @@ export function SmartDispenser() {
   return (
     <div className="w-full max-w-2xl mx-auto p-8">
       <div className="bg-gradient-to-br from-white/5 via-zinc-900/80 to-black/90 rounded-3xl p-8 shadow-2xl border border-white/10 backdrop-blur-sm">
-        
-        {/* Header Updated to Neon */}
-         <div className="text-center mb-10">
+        <div className="text-center mb-10">
           <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">
-             <span className="text-[#d4ff00]">Almus</span> Smart Dispenser
+              <span className="text-[#d4ff00]">Almus</span> Smart Dispenser
           </h2>
         </div>
 
-
-        {/* Glass Area */}
         <div className="relative h-80 mb-8 flex items-end justify-center">
           <div className="relative w-32 h-64 rounded-b-2xl border-4 border-zinc-400/40 bg-gradient-to-b from-white/5 to-black/50 overflow-hidden backdrop-blur-sm">
             <AnimatePresence>
@@ -112,7 +106,6 @@ export function SmartDispenser() {
           </div>
         </div>
 
-        {/* Ice & Lemon Buttons */}
         <div className="flex gap-4 mb-6 justify-center">
           <button onClick={handleIceToggle} className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${addIce ? 'bg-blue-500/20 border-blue-400 text-white shadow-lg' : 'bg-white/5 border-white/20 text-zinc-400 hover:bg-white/10'}`}>
             <Snowflake size={16}/> Ice
@@ -122,7 +115,6 @@ export function SmartDispenser() {
           </button>
         </div>
 
-        {/* Dynamic Selection Menu */}
         <AnimatePresence mode="wait">
           {isFull ? (
             <motion.div key="full" className="flex justify-center" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
