@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion'; // Khallitha framer-motion khaterha standard
 import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
 import cassiseLogo from './assets/cassise.png';

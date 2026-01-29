@@ -1,3 +1,4 @@
+import React from 'react';
 import { ArrowRight, Mail, Phone } from "lucide-react";
 
 export function CTASection() {

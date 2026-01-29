@@ -1,3 +1,4 @@
+import React from 'react';
 import { Cloud, Zap, Users } from "lucide-react";
 import productImage from '../../assets/padel2.jpg';
 import scoreboardImage from '../../assets/padel3.jpg';
