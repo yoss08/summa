@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CupFillAnimation } from './app/components/CupFillAnimation';
 
 // Import beverage logos from assets
 import cocaLogo from './assets/KO.png';
@@ -45,10 +46,30 @@ const liquidColors: Record<DrinkType, string> = {
   citron: 'bg-yellow-300',
 };
 
+// Beverage type for cup animation
+interface Beverage {
+  id: string;
+  name: string;
+  color: string;
+  gradient: string;
+}
+
+const beverageMap: Record<DrinkType, Beverage> = {
+  water: { id: 'water', name: 'Water', color: '#60A5FA', gradient: 'from-blue-400 to-blue-600' },
+  coca: { id: 'coca', name: 'Coca', color: '#B45309', gradient: 'from-amber-700 to-amber-900' },
+  fanta: { id: 'fanta', name: 'Fanta', color: '#F97316', gradient: 'from-orange-400 to-orange-600' },
+  sprite: { id: 'sprite', name: 'Sprite', color: '#84CC16', gradient: 'from-lime-300 to-lime-500' },
+  cassise: { id: 'cassise', name: 'Cassise', color: '#7C3AED', gradient: 'from-purple-600 to-purple-900' },
+  peche: { id: 'peche', name: 'Pêche', color: '#F97316', gradient: 'from-orange-400 to-orange-600' },
+  pasteque: { id: 'pasteque', name: 'Pastèque', color: '#EF4444', gradient: 'from-red-400 to-red-600' },
+  citron: { id: 'citron', name: 'Citron', color: '#FBBF24', gradient: 'from-yellow-300 to-yellow-500' },
+};
+
 export function SmartDispenser() {
   const [menu, setMenu] = useState<MenuState>('main');
   const [selectedDrink, setSelectedDrink] = useState<DrinkType | null>(null);
   const [isDispensing, setIsDispensing] = useState(false);
+  const [fillLevel, setFillLevel] = useState(0);
   const [showIce, setShowIce] = useState(false);
   const [showLemon, setShowLemon] = useState(false);
 
@@ -59,9 +80,22 @@ export function SmartDispenser() {
   const handleDispense = () => {
     if (selectedDrink && !isDispensing) {
       setIsDispensing(true);
-      setTimeout(() => {
-        setIsDispensing(false);
-      }, 3000);
+      setFillLevel(0);
+
+      // Animate fill from 0 to 100%
+      const interval = setInterval(() => {
+        setFillLevel((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              setIsDispensing(false);
+              setFillLevel(0);
+            }, 500);
+            return 100;
+          }
+          return prev + 2; // Increase by 2% each interval
+        });
+      }, 40); // Update every 40ms
     }
   };
 
@@ -124,19 +158,19 @@ export function SmartDispenser() {
       </section>
 
       {/* Interactive Showcase */}
-      <section id="showcase" className="py-16 px-8 flex-grow flex items-center">
+      <section id="showcase" className="py-20 px-8 flex-grow flex items-center justify-center">
         <div className="max-w-5xl mx-auto w-full">
-          <div className="bg-gradient-to-br from-white/5 via-zinc-900/60 to-black/90 rounded-4xl p-20 shadow-2xl border border-white/10 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-white/5 via-zinc-900/60 to-black/90 rounded-4xl p-24 shadow-2xl border border-white/10 backdrop-blur-sm">
             
             {/* Title */}
-            <div className="text-center mb-20">
+            <div className="text-center mb-24">
               <h3 className="text-5xl font-black text-white tracking-tight">
                 <span className="text-[#EEFF00]">ALMUS</span> <span className="italic text-white">SMART DISPENSER</span>
               </h3>
             </div>
 
             {/* Ice & Lemon Options */}
-            <div className="flex gap-6 justify-center mb-20">
+            <div className="flex gap-6 justify-center mb-24">
               <button
                 onClick={() => setShowIce(!showIce)}
                 className={`px-8 py-4 rounded-full border-2 font-bold text-base transition-all duration-300 ${
@@ -159,77 +193,13 @@ export function SmartDispenser() {
               </button>
             </div>
 
-            {/* Glass Cup - CENTERED & LARGE */}
+            {/* Glass Cup - Using New Cup Fill Animation */}
             <div className="flex justify-center mb-20">
-              <div className="relative w-72 h-96">
-                {/* Glass */}
-                <div className="absolute inset-0 rounded-3xl border-4 border-gray-500/70 bg-gradient-to-b from-white/20 to-black/40 overflow-hidden shadow-2xl backdrop-blur-lg">
-                  
-                  {/* Liquid */}
-                  {selectedDrink && (
-                    <motion.div
-                      className={`absolute bottom-0 w-full ${liquidColors[selectedDrink]} opacity-85`}
-                      initial={{ height: '0%' }}
-                      animate={{ height: isDispensing ? '75%' : '0%' }}
-                      transition={{ duration: 2.5, ease: 'easeInOut' }}
-                    />
-                  )}
-
-                  {/* Ice */}
-                  {showIce && isDispensing && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {[...Array(6)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-6 h-6 bg-white/90 rounded-md shadow-lg"
-                          animate={{
-                            y: [Math.random() * 50, Math.random() * 50 + 40],
-                            x: [Math.sin(i) * 20, Math.sin(i) * 20 + 10],
-                            rotate: [0, 360],
-                            opacity: [1, 0.4, 1],
-                          }}
-                          transition={{
-                            duration: 2.5,
-                            delay: i * 0.15,
-                            repeat: Infinity,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Lemon */}
-                  {showLemon && isDispensing && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {[...Array(3)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-8 h-8 bg-yellow-400 rounded-full border-2 border-yellow-500 shadow-lg"
-                          animate={{
-                            y: [0, 30, 0],
-                            scale: [1, 0.6, 1],
-                            rotate: [0, 180, 360],
-                          }}
-                          transition={{
-                            duration: 2.5,
-                            delay: i * 0.35,
-                            repeat: Infinity,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Stream */}
-                  {isDispensing && selectedDrink && (
-                    <motion.div
-                      className={`absolute top-0 left-1/2 -translate-x-1/2 w-3 h-40 ${liquidColors[selectedDrink]} opacity-75 rounded-full blur-sm`}
-                      animate={{ opacity: [0.8, 0.2, 0.8] }}
-                      transition={{ duration: 0.5, repeat: Infinity }}
-                    />
-                  )}
-                </div>
-              </div>
+              <CupFillAnimation 
+                selectedBeverage={selectedDrink ? beverageMap[selectedDrink] : null}
+                isDispensing={isDispensing}
+                fillLevel={fillLevel}
+              />
             </div>
 
             {/* Drink Selection Buttons */}
