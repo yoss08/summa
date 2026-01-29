@@ -1,27 +1,37 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Import beverage logos from assets
+import cocaLogo from './assets/KO.png';
+import fantaLogo from './assets/fanta.png';
+import spriteLogo from './assets/sprite.png';
+import cassiseLogo from './assets/cassiseLogo.png';
+import pechePassionLogo from './assets/pechePassionLogo.png';
+import pastequeLogo from './assets/pastequeLogo.png';
+import citronLogo from './assets/citronLogo.png';
+
 type MenuState = 'main' | 'soda' | 'jus';
 type DrinkType = 'water' | 'coca' | 'fanta' | 'sprite' | 'cassise' | 'peche' | 'pasteque' | 'citron';
 
 interface Drink {
   name: string;
   value: DrinkType;
-  icon: string;
+  icon?: string;
+  logo?: string;
   color: string;
 }
 
 const sodaDrinks: Drink[] = [
-  { name: 'Coca', value: 'coca', icon: '🥤', color: 'bg-amber-900' },
-  { name: 'Fanta', value: 'fanta', icon: '🧡', color: 'bg-orange-500' },
-  { name: 'Sprite', value: 'sprite', icon: '💚', color: 'bg-lime-300' },
+  { name: 'Coca', value: 'coca', logo: cocaLogo, color: 'bg-amber-900' },
+  { name: 'Fanta', value: 'fanta', logo: fantaLogo, color: 'bg-orange-500' },
+  { name: 'Sprite', value: 'sprite', logo: spriteLogo, color: 'bg-lime-300' },
 ];
 
 const juiceDrinks: Drink[] = [
-  { name: 'Cassise', value: 'cassise', icon: '💜', color: 'bg-purple-900' },
-  { name: 'Pêche', value: 'peche', icon: '🍑', color: 'bg-orange-400' },
-  { name: 'Pastèque', value: 'pasteque', icon: '🍉', color: 'bg-red-500' },
-  { name: 'Citron', value: 'citron', icon: '🍋', color: 'bg-yellow-300' },
+  { name: 'Cassise', value: 'cassise', logo: cassiseLogo, color: 'bg-purple-900' },
+  { name: 'Pêche', value: 'peche', logo: pechePassionLogo, color: 'bg-orange-400' },
+  { name: 'Pastèque', value: 'pasteque', logo: pastequeLogo, color: 'bg-red-500' },
+  { name: 'Citron', value: 'citron', logo: citronLogo, color: 'bg-yellow-300' },
 ];
 
 const liquidColors: Record<DrinkType, string> = {
@@ -135,15 +145,15 @@ export function SmartDispenser() {
             {/* Glass Container */}
             <div className="flex justify-center mb-12">
               <div className="relative w-48 h-96">
-                {/* Glass Shape */}
+                {/* Glass Shape - ALWAYS VISIBLE */}
                 <div className="absolute inset-0 rounded-3xl border-4 border-gray-600 bg-gradient-to-b from-white/8 to-black/40 overflow-hidden shadow-2xl backdrop-blur-sm">
                   
                   {/* Liquid Fill Animation */}
-                  {isDispensing && selectedDrink && (
+                  {selectedDrink && (
                     <motion.div
                       className={`absolute bottom-0 w-full ${liquidColors[selectedDrink]} opacity-75`}
                       initial={{ height: '0%' }}
-                      animate={{ height: '85%' }}
+                      animate={{ height: isDispensing ? '85%' : '0%' }}
                       transition={{ duration: 2.5 }}
                     />
                   )}
@@ -263,14 +273,16 @@ export function SmartDispenser() {
                     <button
                       key={drink.value}
                       onClick={() => handleSelectDrink(drink.value)}
-                      className={`p-4 rounded-2xl border transition-all ${
+                      className={`p-4 rounded-2xl border transition-all flex flex-col items-center gap-3 ${
                         selectedDrink === drink.value
                           ? 'border-[#EEFF00] ring-2 ring-[#EEFF00] bg-white/10'
                           : 'border-gray-600 hover:border-gray-500 bg-black/50'
-                      } text-white text-center font-semibold`}
+                      }`}
                     >
-                      <div className="text-2xl mb-2">{drink.icon}</div>
-                      {drink.name}
+                      {drink.logo && (
+                        <img src={drink.logo} alt={drink.name} className="w-12 h-12 object-contain" />
+                      )}
+                      <span className="text-white text-sm font-semibold">{drink.name}</span>
                     </button>
                   ))}
                 </div>
@@ -291,14 +303,16 @@ export function SmartDispenser() {
                     <button
                       key={drink.value}
                       onClick={() => handleSelectDrink(drink.value)}
-                      className={`p-4 rounded-2xl border transition-all ${
+                      className={`p-4 rounded-2xl border transition-all flex flex-col items-center gap-3 ${
                         selectedDrink === drink.value
                           ? 'border-[#EEFF00] ring-2 ring-[#EEFF00] bg-white/10'
                           : 'border-gray-600 hover:border-gray-500 bg-black/50'
-                      } text-white text-center font-semibold`}
+                      }`}
                     >
-                      <div className="text-2xl mb-2">{drink.icon}</div>
-                      {drink.name}
+                      {drink.logo && (
+                        <img src={drink.logo} alt={drink.name} className="w-12 h-12 object-contain" />
+                      )}
+                      <span className="text-white text-sm font-semibold">{drink.name}</span>
                     </button>
                   ))}
                 </div>
