@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SmartDispenser } from "./SmartDispenser";
+import { SmartDispenser } from "../SmartDispenser";
 // Importi el ficher mta3 el Summa hna
 // import { SummaScoring } from "./SummaScoring"; 
 

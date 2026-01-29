@@ -1,17 +1,15 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // Khallitha framer-motion khaterha standard
+import { motion, AnimatePresence } from 'framer-motion';
 import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
 
-// --- Soda Logos (Mel dossier assets mte3ek) ---
-import cocaColaLogo from '../assets/KO.png';
-import fantaLogo from '../assets/fanta.png';
-import spriteLogo from '../assets/sprite.png';
-
-// --- Jus Logos ---
-import cassiseLogo from '../assets/cassise.png';
-import pechePassionLogo from '../assets/peche_passion.png';
-import pastequeLogo from '../assets/pasteque.png';
-import citronLogo from '../assets/citron.png';
+// Logos - تأكد أن الملفات موجودة في assets/
+import cocaColaLogo from './assets/KO.png';
+import fantaLogo from './assets/fanta.png';
+import spriteLogo from './assets/sprite.png';
+import cassiseLogo from './assets/cassiseLogo.png';
+import pechePassionLogo from './assets/pechePassionLogo.png';
+import pastequeLogo from './assets/pastequeLogo.png';
+import citronLogo from './assets/citronLogo.png';
 
 type BeverageType = 'water' | 'fanta' | 'coca' | 'sprite' | 'cassise' | 'peche_passion' | 'pasteque' | 'citron_jus' | null;
 
