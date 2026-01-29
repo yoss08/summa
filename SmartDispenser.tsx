@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Droplet, Snowflake, Citrus, ChevronLeft } from 'lucide-react';
+import { CupFillAnimation } from './app/components/CupFillAnimation';
 
 // Import brand logos
 const cocaColaLogo = undefined;
@@ -11,6 +12,8 @@ type BeverageType = 'water' | 'fanta' | 'coca' | 'sprite' | null;
 
 interface BeverageConfig {
   name: string;
+  color: string;
+  gradient: string;
   liquidGradient: string;
   shadowColor: string;
   streamGradient: string;
@@ -20,6 +23,8 @@ interface BeverageConfig {
 const beverageConfigs: Record<Exclude<BeverageType, null>, BeverageConfig> = {
   water: {
     name: 'Water',
+    color: '#60A5FA',
+    gradient: 'from-blue-400 to-blue-600',
     liquidGradient: 'bg-gradient-to-t from-cyan-400/80 to-blue-300/60',
     shadowColor: '0 0 20px rgba(6, 182, 212, 0.4)',
     streamGradient: 'linear-gradient(to bottom, rgba(34, 211, 238, 0.9), rgba(34, 211, 238, 0.3))',
@@ -27,6 +32,8 @@ const beverageConfigs: Record<Exclude<BeverageType, null>, BeverageConfig> = {
   },
   fanta: {
     name: 'Fanta',
+    color: '#F97316',
+    gradient: 'from-orange-600 to-orange-400',
     liquidGradient: 'bg-gradient-to-t from-orange-600 to-orange-400',
     shadowColor: '0 0 20px rgba(249, 115, 22, 0.5)',
     streamGradient: 'linear-gradient(to bottom, rgba(249, 115, 22, 0.9), rgba(249, 115, 22, 0.3))',
@@ -34,6 +41,8 @@ const beverageConfigs: Record<Exclude<BeverageType, null>, BeverageConfig> = {
   },
   coca: {
     name: 'Coca Cola',
+    color: '#78350F',
+    gradient: 'from-amber-950 to-amber-900',
     liquidGradient: 'bg-gradient-to-t from-amber-950 to-amber-900',
     shadowColor: '0 0 20px rgba(120, 53, 15, 0.6)',
     streamGradient: 'linear-gradient(to bottom, rgba(120, 53, 15, 0.9), rgba(120, 53, 15, 0.3))',
@@ -41,6 +50,8 @@ const beverageConfigs: Record<Exclude<BeverageType, null>, BeverageConfig> = {
   },
   sprite: {
     name: 'Sprite',
+    color: '#84CC16',
+    gradient: 'from-lime-300 to-lime-500',
     liquidGradient: 'bg-gradient-to-t from-lime-300/70 to-lime-200/50',
     shadowColor: '0 0 20px rgba(132, 204, 22, 0.4)',
     streamGradient: 'linear-gradient(to bottom, rgba(190, 242, 100, 0.9), rgba(190, 242, 100, 0.3))',
@@ -144,175 +155,18 @@ export function SmartDispenser() {
           <p className="text-zinc-400 text-sm">Select your beverage</p>
         </div>
 
-        {/* Glass Display Area */}
-        <div className="relative h-80 mb-8 flex items-end justify-center">
-          {/* Glass Container */}
-          <div className="relative w-32 h-64 rounded-b-2xl border-4 border-zinc-400/40 bg-gradient-to-b from-white/5 to-black/50 overflow-hidden backdrop-blur-sm">
-            {/* Glass Highlight */}
-            <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-white/50 to-transparent" />
-            <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
-            
-            {/* Ice Cubes */}
-            <AnimatePresence>
-              {addIce && iceCubes.map((cube) => (
-                <motion.div
-                  key={cube.id}
-                  initial={{ y: -300, opacity: 0, rotate: 0 }}
-                  animate={{ 
-                    y: 0,
-                    opacity: 1,
-                    rotate: cube.rotation
-                  }}
-                  exit={{ opacity: 0, scale: 0 }}
-                  transition={{ 
-                    duration: 0.7,
-                    delay: cube.delay,
-                    ease: [0.34, 1.56, 0.64, 1]
-                  }}
-                  className="absolute bg-gradient-to-br from-blue-100/90 to-blue-200/70 backdrop-blur-sm border-2 border-blue-200/60 rounded-sm shadow-lg"
-                  style={{
-                    left: `${cube.x}%`,
-                    bottom: `${cube.y}%`,
-                    width: `${cube.size}px`,
-                    height: `${cube.size}px`,
-                    boxShadow: '0 2px 10px rgba(255, 255, 255, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.8)'
-                  }}
-                >
-                  <div className="absolute top-0 left-0 w-2 h-2 bg-white/80 rounded-sm" />
-                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-blue-300/60" />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-
-            {/* Lemon Slices */}
-            <AnimatePresence>
-              {addLemon && (
-                <div className="absolute inset-0 pointer-events-none z-10">
-                  {[...Array(2)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ scale: 0, opacity: 0, rotate: 0 }}
-                      animate={{ scale: 1, opacity: 1, rotate: 360 }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ 
-                        delay: i * 0.15,
-                        type: "spring",
-                        stiffness: 200
-                      }}
-                      className="absolute w-9 h-9 rounded-full border-3 border-yellow-300 bg-gradient-to-br from-yellow-200 to-yellow-300"
-                      style={{
-                        left: `${25 + i * 25}%`,
-                        top: `${25 + i * 30}%`,
-                        boxShadow: '0 2px 8px rgba(250, 204, 21, 0.4)',
-                      }}
-                    >
-                      <div className="absolute inset-1 rounded-full bg-yellow-100/60" />
-                      <div className="absolute inset-0 rounded-full overflow-hidden">
-                        {[...Array(8)].map((_, j) => (
-                          <div
-                            key={j}
-                            className="absolute w-full h-px bg-yellow-400/50 top-1/2 left-1/2 origin-left"
-                            style={{
-                              transform: `rotate(${j * 45}deg)`,
-                              width: '50%'
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <div className="absolute w-1 h-1.5 bg-yellow-600/60 rounded-full top-1/2 left-1/3" />
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </AnimatePresence>
-
-            {/* Liquid Fill */}
-            <AnimatePresence>
-              {(isDispensing || isFull) && currentConfig && (
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${fillLevel}%` }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1, ease: 'linear' }}
-                  className={`absolute bottom-0 left-0 right-0 ${currentConfig.liquidGradient}`}
-                  style={{
-                    boxShadow: currentConfig.shadowColor
-                  }}
-                >
-                  {currentConfig.hasBubbles && fillLevel < 95 && !isFull && (
-                    <div className="absolute inset-0 overflow-hidden">
-                      {[...Array(8)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1.5 h-1.5 bg-white/70 rounded-full"
-                          initial={{ 
-                            bottom: 0,
-                            left: `${10 + i * 11}%`,
-                          }}
-                          animate={{
-                            bottom: '100%',
-                            opacity: [0.7, 0.9, 0],
-                          }}
-                          transition={{
-                            duration: 1.2 + Math.random() * 0.5,
-                            repeat: Infinity,
-                            delay: i * 0.15,
-                            ease: 'linear'
-                          }}
-                          style={{
-                            boxShadow: '0 0 3px rgba(255, 255, 255, 0.5)'
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  
-                  <div className="absolute top-0 left-0 right-0 h-4 overflow-hidden">
-                    <motion.div
-                      className="absolute inset-0 bg-white/20"
-                      animate={{
-                        transform: ['translateX(0%)', 'translateX(100%)']
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: 'linear'
-                      }}
-                      style={{
-                        clipPath: 'polygon(0% 50%, 10% 30%, 20% 50%, 30% 30%, 40% 50%, 50% 30%, 60% 50%, 70% 30%, 80% 50%, 90% 30%, 100% 50%, 100% 100%, 0% 100%)'
-                      }}
-                    />
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Dispensing Stream */}
-            <AnimatePresence>
-              {isDispensing && fillLevel < 95 && currentConfig && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: '40%' }}
-                  exit={{ opacity: 0 }}
-                  className="absolute top-0 left-1/2 w-1.5 -translate-x-1/2 rounded-full"
-                  style={{
-                    background: currentConfig.streamGradient,
-                    filter: 'blur(0.5px)'
-                  }}
-                />
-              )}
-            </AnimatePresence>
-          </div>
-
-          {isDispensing && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="absolute top-0 left-1/2 -translate-x-1/2 text-sm text-white font-light"
-            >
-              Dispensing...
-            </motion.div>
-          )}
+        {/* Glass Display Area - Using CupFillAnimation Component */}
+        <div className="relative mb-8 flex items-center justify-center">
+          <CupFillAnimation
+            selectedBeverage={selectedBeverage ? {
+              id: selectedBeverage,
+              name: beverageConfigs[selectedBeverage].name,
+              color: beverageConfigs[selectedBeverage].color,
+              gradient: beverageConfigs[selectedBeverage].gradient,
+            } : null}
+            isDispensing={isDispensing}
+            fillLevel={fillLevel}
+          />
         </div>
 
         {/* Ice & Lemon Options */}
