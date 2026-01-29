@@ -1,16 +1,15 @@
-  import { useState } from 'react';
-  import { motion, AnimatePresence } from 'framer-motion';
-  import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
 
-  // Logos - تأكد أن الملفات موجودة في assets/
-  import cocaColaLogo from './assets/KO.png';
-  import fantaLogo from './assets/fanta.png';
-  import spriteLogo from './assets/sprite.png';
-  import cassiseLogo from './assets/cassiseLogo.png';
-  import pechePassionLogo from './assets/pechePassionLogo.png';
-  import pastequeLogo from './assets/pastequeLogo.png';
-  import citronLogo from './assets/citronLogo.png';
-
+// Salla7na el paths mta3 el logos bech el VS Code mayeb9ach a7mer
+import cocaColaLogo from './assets/KO.png';
+import fantaLogo from './assets/fanta.png';
+import spriteLogo from './assets/sprite.png';
+import cassiseLogo from './assets/cassiseLogo.png';
+import pechePassionLogo from './assets/pechePassionLogo.png';
+import pastequeLogo from './assets/pastequeLogo.png';
+import citronLogo from './assets/citronLogo.png';
   type BeverageType = 'water' | 'fanta' | 'coca' | 'sprite' | 'cassise' | 'peche_passion' | 'pasteque' | 'citron_jus' | null;
 
   interface BeverageConfig {

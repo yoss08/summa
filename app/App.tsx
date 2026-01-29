@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { SmartDispenser } from "../SmartDispenser";
+// Salla7na el path hne (zidna el {})
+import { SmartDispenser } from "../SmartDispenser"; 
 
 export default function App() {
   const [view, setView] = useState<'summa' | 'dispenser'>('summa');
