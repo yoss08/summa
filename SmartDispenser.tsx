@@ -2,14 +2,23 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CupFillAnimation } from './app/components/CupFillAnimation';
 
-// Import beverage logos from assets
-import cocaLogo from './assets/KO.png';
-import fantaLogo from './assets/fanta.png';
-import spriteLogo from './assets/sprite.png';
-import cassiseLogo from './assets/cassiseLogo.png';
-import pechePassionLogo from './assets/pechePassionLogo.png';
-import pastequeLogo from './assets/pastequeLogo.png';
-import citronLogo from './assets/citronLogo.png';
+// Import beverage logos from assets (commented out - add actual logos as needed)
+// import cocaLogo from './assets/KO.png';
+// import fantaLogo from './assets/fanta.png';
+// import spriteLogo from './assets/sprite.png';
+// import cassiseLogo from './assets/cassiseLogo.png';
+// import pechePassionLogo from './assets/pechePassionLogo.png';
+// import pastequeLogo from './assets/pastequeLogo.png';
+// import citronLogo from './assets/citronLogo.png';
+
+// Placeholder values - replace with actual logo imports when available
+const cocaLogo = undefined;
+const fantaLogo = undefined;
+const spriteLogo = undefined;
+const cassiseLogo = undefined;
+const pechePassionLogo = undefined;
+const pastequeLogo = undefined;
+const citronLogo = undefined;
 
 type MenuState = 'main' | 'soda' | 'jus';
 type DrinkType = 'water' | 'coca' | 'fanta' | 'sprite' | 'cassise' | 'peche' | 'pasteque' | 'citron';
@@ -84,7 +93,7 @@ export function SmartDispenser() {
 
       // Animate fill from 0 to 100%
       const interval = setInterval(() => {
-        setFillLevel((prev) => {
+        setFillLevel((prev: number) => {
           if (prev >= 100) {
             clearInterval(interval);
             setTimeout(() => {
