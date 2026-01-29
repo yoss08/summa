@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CupFillAnimation } from './app/components/CupFillAnimation';
+import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
 
-// Import beverage logos from assets (commented out - add actual logos as needed)
-// import cocaLogo from './assets/KO.png';
-// import fantaLogo from './assets/fanta.png';
-// import spriteLogo from './assets/sprite.png';
-// import cassiseLogo from './assets/cassiseLogo.png';
-// import pechePassionLogo from './assets/pechePassionLogo.png';
-// import pastequeLogo from './assets/pastequeLogo.png';
-// import citronLogo from './assets/citronLogo.png';
-
-// Placeholder values - replace with actual logo imports when available
-const cocaLogo = undefined;
+// Assets
+const cocaColaLogo = undefined;
 const fantaLogo = undefined;
 const spriteLogo = undefined;
 const cassiseLogo = undefined;
@@ -20,365 +11,191 @@ const pechePassionLogo = undefined;
 const pastequeLogo = undefined;
 const citronLogo = undefined;
 
-type MenuState = 'main' | 'soda' | 'jus';
-type DrinkType = 'water' | 'coca' | 'fanta' | 'sprite' | 'cassise' | 'peche' | 'pasteque' | 'citron';
-
-interface Drink {
-  name: string;
-  value: DrinkType;
-  icon?: string;
-  logo?: string;
-  color: string;
-}
-
-const sodaDrinks: Drink[] = [
-  { name: 'Coca', value: 'coca', logo: cocaLogo, color: 'bg-amber-900' },
-  { name: 'Fanta', value: 'fanta', logo: fantaLogo, color: 'bg-orange-500' },
-  { name: 'Sprite', value: 'sprite', logo: spriteLogo, color: 'bg-lime-300' },
-];
-
-const juiceDrinks: Drink[] = [
-  { name: 'Cassise', value: 'cassise', logo: cassiseLogo, color: 'bg-purple-900' },
-  { name: 'Pêche', value: 'peche', logo: pechePassionLogo, color: 'bg-orange-400' },
-  { name: 'Pastèque', value: 'pasteque', logo: pastequeLogo, color: 'bg-red-500' },
-  { name: 'Citron', value: 'citron', logo: citronLogo, color: 'bg-yellow-300' },
-];
-
-const liquidColors: Record<DrinkType, string> = {
-  water: 'bg-blue-300',
-  coca: 'bg-amber-900',
-  fanta: 'bg-orange-500',
-  sprite: 'bg-lime-300',
-  cassise: 'bg-purple-900',
-  peche: 'bg-orange-400',
-  pasteque: 'bg-red-500',
-  citron: 'bg-yellow-300',
-};
-
-// Beverage type for cup animation
-interface Beverage {
-  id: string;
-  name: string;
-  color: string;
-  gradient: string;
-}
-
-const beverageMap: Record<DrinkType, Beverage> = {
-  water: { id: 'water', name: 'Water', color: '#60A5FA', gradient: 'from-blue-400 to-blue-600' },
-  coca: { id: 'coca', name: 'Coca', color: '#B45309', gradient: 'from-amber-700 to-amber-900' },
-  fanta: { id: 'fanta', name: 'Fanta', color: '#F97316', gradient: 'from-orange-400 to-orange-600' },
-  sprite: { id: 'sprite', name: 'Sprite', color: '#84CC16', gradient: 'from-lime-300 to-lime-500' },
-  cassise: { id: 'cassise', name: 'Cassise', color: '#7C3AED', gradient: 'from-purple-600 to-purple-900' },
-  peche: { id: 'peche', name: 'Pêche', color: '#F97316', gradient: 'from-orange-400 to-orange-600' },
-  pasteque: { id: 'pasteque', name: 'Pastèque', color: '#EF4444', gradient: 'from-red-400 to-red-600' },
-  citron: { id: 'citron', name: 'Citron', color: '#FBBF24', gradient: 'from-yellow-300 to-yellow-500' },
+const beverageConfigs: any = {
+  water: { name: 'Water', liquidGradient: 'bg-gradient-to-t from-cyan-400/80 to-blue-300/60', hasBubbles: false, color: '#22d3ee' },
+  coca: { name: 'Coca Cola', logo: cocaColaLogo, liquidGradient: 'bg-gradient-to-t from-amber-950 to-amber-900', hasBubbles: true, color: '#78350f' },
+  fanta: { name: 'Fanta', logo: fantaLogo, liquidGradient: 'bg-gradient-to-t from-orange-600 to-orange-400', hasBubbles: true, color: '#f97316' },
+  sprite: { name: 'Sprite', logo: spriteLogo, liquidGradient: 'bg-gradient-to-t from-lime-300/70 to-lime-200/50', hasBubbles: true, color: '#bef264' },
+  cassise: { name: 'Cassise', logo: cassiseLogo, liquidGradient: 'bg-gradient-to-t from-purple-900 to-purple-600', hasBubbles: true, color: '#9333ea' },
+  peche_passion: { name: 'Pêche', logo: pechePassionLogo, liquidGradient: 'bg-gradient-to-t from-orange-500 to-yellow-400', hasBubbles: false, color: '#f97316' },
+  pasteque: { name: 'Pastèque', logo: pastequeLogo, liquidGradient: 'bg-gradient-to-t from-red-600 to-pink-400', hasBubbles: false, color: '#dc2626' },
+  citron_jus: { name: 'Citron', logo: citronLogo, liquidGradient: 'bg-gradient-to-t from-lime-500 to-yellow-300', hasBubbles: false, color: '#65a30d' },
 };
 
 export function SmartDispenser() {
-  const [menu, setMenu] = useState<MenuState>('main');
-  const [selectedDrink, setSelectedDrink] = useState<DrinkType | null>(null);
+  const [selectedBeverage, setSelectedBeverage] = useState<any>(null);
   const [isDispensing, setIsDispensing] = useState(false);
   const [fillLevel, setFillLevel] = useState(0);
-  const [showIce, setShowIce] = useState(false);
-  const [showLemon, setShowLemon] = useState(false);
+  const [addIce, setAddIce] = useState(false);
+  const [addLemon, setAddLemon] = useState(false);
+  const [menuView, setMenuView] = useState<'main' | 'soda' | 'jus'>('main');
+  const [isFull, setIsFull] = useState(false);
 
-  const handleSelectDrink = (drink: DrinkType) => {
-    setSelectedDrink(drink);
+  const handleDispense = (beverage: string) => {
+    if (isDispensing || isFull) return;
+    setSelectedBeverage(beverage);
+    setIsDispensing(true);
+    let level = 0;
+    const interval = setInterval(() => {
+      level += 1.2;
+      if (level >= 100) {
+        setFillLevel(100);
+        clearInterval(interval);
+        setIsDispensing(false);
+        setIsFull(true);
+      } else {
+        setFillLevel(level);
+      }
+    }, 30);
   };
 
-  const handleDispense = () => {
-    if (selectedDrink && !isDispensing) {
-      setIsDispensing(true);
-      setFillLevel(0);
-
-      // Animate fill from 0 to 100%
-      const interval = setInterval(() => {
-        setFillLevel((prev: number) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setTimeout(() => {
-              setIsDispensing(false);
-              setFillLevel(0);
-            }, 500);
-            return 100;
-          }
-          return prev + 2; // Increase by 2% each interval
-        });
-      }, 40); // Update every 40ms
-    }
-  };
+  const current = selectedBeverage ? beverageConfigs[selectedBeverage] : null;
 
   return (
-    <div className="w-full min-h-screen bg-black flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 px-8 py-6 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-12 bg-[#EEFF00] rounded-full flex items-center justify-center text-xl">
-              🔥
-            </div>
-            <span className="text-white font-bold tracking-widest">ALMUS</span>
-          </div>
-          <nav className="hidden md:flex gap-12 text-gray-400 text-sm font-semibold">
-            <a href="#features" className="hover:text-white transition">FEATURES</a>
-            <a href="#showcase" className="hover:text-white transition">TRY IT</a>
-            <a href="#about" className="hover:text-white transition">ABOUT</a>
-          </nav>
-        </div>
-      </header>
+    <div className="w-full max-w-2xl mx-auto p-4 md:p-8">
+      <div className="bg-zinc-900/90 rounded-[40px] p-8 border border-white/10 shadow-2xl backdrop-blur-xl">
+        <h2 className="text-3xl font-black text-white italic text-center mb-10 uppercase tracking-tighter">
+          <span className="text-[#d4ff00]">ALMUS</span> Dispenser
+        </h2>
 
-      {/* Hero Section */}
-      <section className="relative py-20 px-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-block mb-6 px-4 py-2 border border-gray-700 rounded-full">
-            <span className="text-gray-500 text-xs uppercase tracking-widest font-semibold">INNOVATION 2026</span>
-          </div>
-          <h1 className="text-8xl md:text-9xl font-black text-white mb-6 leading-tight">
-            THE FUTURE OF<br/>
-            <span className="text-[#EEFF00]">DISPENSING</span>
-          </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-6 leading-relaxed">
-            Experience the next generation of smart technology. Sleek carbon design meets <span className="font-bold text-white">intelligent functionality.</span>
-          </p>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-24 px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-3xl border-2 border-[#EEFF00] bg-black/50 backdrop-blur">
-              <div className="text-4xl mb-6">✨</div>
-              <h3 className="text-white font-black text-xl mb-4">SMART TECH</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">Advanced sensors for precise fill levels.</p>
-            </div>
-            <div className="p-8 rounded-3xl border border-gray-700 bg-black/50 backdrop-blur hover:border-gray-600 transition">
-              <div className="text-4xl mb-6">⚡</div>
-              <h3 className="text-white font-black text-xl mb-4">INSTANT RESPONSE</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">Lightning-fast dispensing with zero delay.</p>
-            </div>
-            <div className="p-8 rounded-3xl border border-gray-700 bg-black/50 backdrop-blur hover:border-gray-600 transition">
-              <div className="text-4xl mb-6">🔥</div>
-              <h3 className="text-white font-black text-xl mb-4">MULTIPLE DRINKS</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">Customizable options for every taste.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Showcase */}
-      <section id="showcase" className="py-20 px-8 flex-grow flex items-center justify-center">
-        <div className="max-w-5xl mx-auto w-full">
-          <div className="bg-gradient-to-br from-white/5 via-zinc-900/60 to-black/90 rounded-4xl p-24 shadow-2xl border border-white/10 backdrop-blur-sm">
+        {/* Cup View */}
+        <div className="relative h-80 mb-10 flex items-end justify-center">
+          <div className="relative w-40 h-72 rounded-b-[3.5rem] border-4 border-white/10 bg-white/5 overflow-hidden shadow-inner">
             
-            {/* Title */}
-            <div className="text-center mb-24">
-              <h3 className="text-5xl font-black text-white tracking-tight">
-                <span className="text-[#EEFF00]">ALMUS</span> <span className="italic text-white">SMART DISPENSER</span>
-              </h3>
-            </div>
-
-            {/* Ice & Lemon Options */}
-            <div className="flex gap-6 justify-center mb-24">
-              <button
-                onClick={() => setShowIce(!showIce)}
-                className={`px-8 py-4 rounded-full border-2 font-bold text-base transition-all duration-300 ${
-                  showIce
-                    ? 'border-[#EEFF00] text-white bg-white/15'
-                    : 'border-gray-600 text-gray-400 hover:border-gray-500'
-                }`}
+            {/* Liquid */}
+            {(isDispensing || isFull) && current && (
+              <motion.div 
+                initial={{ height: 0 }} 
+                animate={{ height: `${fillLevel}%` }} 
+                className={`absolute bottom-0 left-0 right-0 ${current.liquidGradient}`}
               >
-                ❄️ Ice
-              </button>
-              <button
-                onClick={() => setShowLemon(!showLemon)}
-                className={`px-8 py-4 rounded-full border-2 font-bold text-base transition-all duration-300 ${
-                  showLemon
-                    ? 'border-[#EEFF00] text-white bg-white/15'
-                    : 'border-gray-600 text-gray-400 hover:border-gray-500'
-                }`}
-              >
-                🍋 Lemon
-              </button>
-            </div>
+                {/* Wave Top */}
+                <motion.div 
+                  animate={{ x: [-10, 10, -10] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  className="absolute -top-2 left-0 w-[120%] h-4 bg-white/20 blur-sm rounded-full"
+                />
 
-            {/* Glass Cup - Using New Cup Fill Animation */}
-            <div className="flex justify-center mb-20">
-              <CupFillAnimation 
-                selectedBeverage={selectedDrink ? beverageMap[selectedDrink] : null}
-                isDispensing={isDispensing}
-                fillLevel={fillLevel}
-              />
-            </div>
-
-            {/* Drink Selection Buttons */}
-            {menu === 'main' && (
-              <div className="grid grid-cols-3 gap-6 mb-8">
-                <button 
-                  onClick={() => handleSelectDrink('water')}
-                  className="p-8 rounded-2xl border-2 border-gray-600 bg-black/60 hover:border-[#EEFF00] transition text-white font-bold text-center text-lg"
-                >
-                  <div className="text-4xl mb-4">💧</div>
-                  WATER
-                </button>
-                <button 
-                  onClick={() => setMenu('soda')}
-                  className="p-8 rounded-2xl border-2 border-gray-600 bg-black/60 hover:border-[#EEFF00] transition text-white font-bold text-center text-lg"
-                >
-                  <div className="text-4xl mb-4">🥤</div>
-                  SODA
-                </button>
-                <button 
-                  onClick={() => setMenu('jus')}
-                  className="p-8 rounded-2xl border-2 border-gray-600 bg-black/60 hover:border-[#EEFF00] transition text-white font-bold text-center text-lg"
-                >
-                  <div className="text-4xl mb-4">🍊</div>
-                  JUS
-                </button>
-              </div>
+                {/* Bubbles (Only for Soda) */}
+                {current.hasBubbles && (
+                  <div className="absolute inset-0">
+                    {[...Array(10)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ y: "100%", opacity: 0 }}
+                        animate={{ y: "-10%", opacity: [0, 1, 0] }}
+                        transition={{ repeat: Infinity, duration: Math.random() * 2 + 1, delay: i * 0.2 }}
+                        className="absolute w-1 h-1 bg-white/40 rounded-full"
+                        style={{ left: `${Math.random() * 100}%` }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </motion.div>
             )}
 
-            {/* Soda Menu */}
-            {menu === 'soda' && (
-              <div className="mb-8">
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  {sodaDrinks.map((drink) => (
-                    <button
-                      key={drink.value}
-                      onClick={() => handleSelectDrink(drink.value)}
-                      className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 ${
-                        selectedDrink === drink.value
-                          ? 'border-[#EEFF00] ring-2 ring-[#EEFF00]/50 bg-white/15'
-                          : 'border-gray-600 hover:border-gray-500 bg-black/60'
-                      }`}
-                    >
-                      {drink.logo && (
-                        <img src={drink.logo} alt={drink.name} className="w-16 h-16 object-contain" />
-                      )}
-                      <span className="text-white text-base font-bold">{drink.name}</span>
-                    </button>
-                  ))}
+            {/* Ice Cubes Animation */}
+            <AnimatePresence>
+              {addIce && (
+                <div className="absolute inset-0 pointer-events-none z-10">
+                   {[...Array(6)].map((_, i) => (
+                     <motion.div
+                        key={i}
+                        initial={{ y: -300, rotate: 0, opacity: 0 }}
+                        animate={{ y: 220 - (i * 10), rotate: 45, opacity: 1 }}
+                        className="absolute w-10 h-10 bg-white/30 border border-white/40 rounded-lg blur-[0.5px]"
+                        style={{ left: `${15 + (i * 12)}%` }}
+                     />
+                   ))}
                 </div>
-                <button 
-                  onClick={() => setMenu('main')}
-                  className="w-full p-4 rounded-lg border-2 border-gray-600 bg-black/60 hover:border-gray-500 transition text-gray-400 text-base font-bold"
-                >
-                  ← Back to Menu
-                </button>
-              </div>
-            )}
-
-            {/* Juice Menu */}
-            {menu === 'jus' && (
-              <div className="mb-8">
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  {juiceDrinks.map((drink) => (
-                    <button
-                      key={drink.value}
-                      onClick={() => handleSelectDrink(drink.value)}
-                      className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 ${
-                        selectedDrink === drink.value
-                          ? 'border-[#EEFF00] ring-2 ring-[#EEFF00]/50 bg-white/15'
-                          : 'border-gray-600 hover:border-gray-500 bg-black/60'
-                      }`}
-                    >
-                      {drink.logo && (
-                        <img src={drink.logo} alt={drink.name} className="w-16 h-16 object-contain" />
-                      )}
-                      <span className="text-white text-base font-bold">{drink.name}</span>
-                    </button>
-                  ))}
-                </div>
-                <button 
-                  onClick={() => setMenu('main')}
-                  className="w-full p-4 rounded-lg border-2 border-gray-600 bg-black/60 hover:border-gray-500 transition text-gray-400 text-base font-bold"
-                >
-                  ← Back to Menu
-                </button>
-              </div>
-            )}
-
-            {/* Creative Dispense Button */}
-            <button
-              onClick={handleDispense}
-              disabled={!selectedDrink || isDispensing}
-              className="w-full py-6 rounded-2xl bg-gradient-to-r from-[#EEFF00] via-[#d4ff00] to-[#EEFF00] text-black font-black text-2xl hover:shadow-2xl hover:shadow-[#EEFF00]/60 transition-all disabled:opacity-40 disabled:cursor-not-allowed uppercase tracking-widest shadow-xl hover:scale-105 duration-300 relative overflow-hidden"
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                animate={{ x: ['-100%', '100%'] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              {isDispensing ? (
-                <motion.span
-                  animate={{ opacity: [1, 0.5, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="relative z-10"
-                >
-                  DISPENSING...
-                </motion.span>
-              ) : (
-                <span className="relative z-10">DISPENSE ✨</span>
               )}
-            </button>
+            </AnimatePresence>
+
+            {/* Stream */}
+            {isDispensing && (
+              <motion.div 
+                initial={{ height: 0 }} 
+                animate={{ height: '100%' }}
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 bg-white/40 blur-[1px] z-20"
+              />
+            )}
           </div>
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="py-48 px-8 bg-[#EEFF00] mt-32">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-6xl md:text-7xl font-black text-black mb-8 leading-tight">
-            INNOVATION<br/>MEETS DESIGN
-          </h2>
-          <p className="text-black text-lg mb-12 max-w-2xl leading-relaxed">
-            Almus represents the pinnacle of beverage technology. Our minimalist carbon philosophy creates an unparalleled user experience.
-          </p>
-          <button className="px-10 py-4 bg-black text-[#EEFF00] font-black text-lg rounded-full hover:scale-105 transition uppercase tracking-widest shadow-lg">
-            GET A QUOTE →
+        {/* Toppings Buttons */}
+        <div className="flex gap-4 mb-8 justify-center">
+          <button 
+            onClick={() => setAddIce(!addIce)}
+            className={`px-6 py-3 rounded-2xl border transition ${addIce ? 'bg-blue-500/20 border-blue-400 text-white' : 'border-white/10 text-zinc-500'}`}
+          >
+            <Snowflake className="inline mr-2" size={18}/> ICE
+          </button>
+          <button 
+            onClick={() => setAddLemon(!addLemon)}
+            className={`px-6 py-3 rounded-2xl border transition ${addLemon ? 'bg-yellow-500/20 border-yellow-400 text-white' : 'border-white/10 text-zinc-500'}`}
+          >
+            <Citrus className="inline mr-2" size={18}/> LEMON
           </button>
         </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="bg-black border-t border-white/10 py-20 px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+        {/* Dynamic Menu */}
+        <AnimatePresence mode="wait">
+          {isFull ? (
+            <motion.button 
+              initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+              onClick={() => { setIsFull(false); setFillLevel(0); setSelectedBeverage(null); }}
+              className="w-full py-5 bg-[#d4ff00] text-black font-black uppercase rounded-2xl shadow-[0_0_20px_#d4ff0044] hover:scale-[1.02] active:scale-95 transition"
+            >
+              Take Your Drink & Get New Cup
+            </motion.button>
+          ) : menuView === 'main' ? (
+            <div className="grid grid-cols-3 gap-4">
+              <MenuBtn icon={<Droplet/>} label="Water" onClick={() => handleDispense('water')} />
+              <MenuBtn icon={<Wine/>} label="Soda" onClick={() => setMenuView('soda')} />
+              <MenuBtn icon={<Citrus/>} label="Jus" onClick={() => setMenuView('jus')} />
+            </div>
+          ) : (
             <div>
-              <h4 className="text-white font-black text-sm uppercase tracking-widest mb-6">Contact</h4>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-gray-400 hover:text-white transition">
-                  <span>✉️</span>
-                  <a href="mailto:info@almus.com">info@almus.com</a>
-                </div>
-                <div className="flex items-center gap-3 text-gray-400 hover:text-white transition">
-                  <span>📞</span>
-                  <a href="tel:+1234567890">+1 (234) 567-890</a>
-                </div>
+              <button onClick={() => setMenuView('main')} className="text-[#d4ff00] text-xs font-bold uppercase mb-4 flex items-center gap-1">
+                <ChevronLeft size={16}/> Back to Main Menu
+              </button>
+              <div className="grid grid-cols-4 gap-4">
+                {menuView === 'soda' ? (
+                  <>
+                    <FlavorCard img={cocaColaLogo} label="Coca" onClick={() => handleDispense('coca')} />
+                    <FlavorCard img={fantaLogo} label="Fanta" onClick={() => handleDispense('fanta')} />
+                    <FlavorCard img={spriteLogo} label="Sprite" onClick={() => handleDispense('sprite')} />
+                  </>
+                ) : (
+                  <>
+                    <FlavorCard img={cassiseLogo} label="Cassise" onClick={() => handleDispense('cassise')} />
+                    <FlavorCard img={pechePassionLogo} label="Pêche" onClick={() => handleDispense('peche_passion')} />
+                    <FlavorCard img={pastequeLogo} label="Pastèque" onClick={() => handleDispense('pasteque')} />
+                    <FlavorCard img={citronLogo} label="Citron" onClick={() => handleDispense('citron_jus')} />
+                  </>
+                )}
               </div>
             </div>
-            <div>
-              <h4 className="text-white font-black text-sm uppercase tracking-widest mb-6">Product</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><a href="#" className="hover:text-white transition">Features</a></li>
-                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition">Specs</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-black text-sm uppercase tracking-widest mb-6">Legal</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><a href="#" className="hover:text-white transition">Privacy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms</a></li>
-                <li><a href="#" className="hover:text-white transition">Support</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-white/10 pt-8 text-center text-gray-600">
-            <p>© 2026 ALMUS. Innovation in every drop.</p>
-          </div>
-        </div>
-      </footer>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
+
+// Sub-Components
+const MenuBtn = ({ icon, label, onClick }: any) => (
+  <button onClick={onClick} className="flex flex-col items-center gap-3 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-[#d4ff00] transition-all group">
+    <div className="text-zinc-500 group-hover:text-[#d4ff00]">{icon}</div>
+    <span className="text-white text-[10px] font-black uppercase">{label}</span>
+  </button>
+);
+
+const FlavorCard = ({ img, label, onClick }: any) => (
+  <button onClick={onClick} className="flex flex-col items-center gap-2 group active:scale-90 transition">
+    <div className="w-16 h-16 rounded-full bg-white p-2 shadow-lg group-hover:ring-4 group-hover:ring-[#d4ff00] overflow-hidden">
+      <img src={img} alt={label} className="w-full h-full object-contain" />
+    </div>
+    <span className="text-[9px] text-zinc-500 font-bold uppercase group-hover:text-white">{label}</span>
+  </button>
+);
