@@ -90,7 +90,7 @@ export function SmartDispenser() {
           <div className="inline-block mb-8 px-4 py-2 border border-gray-700 rounded-full">
             <span className="text-gray-500 text-xs uppercase tracking-widest font-semibold">INNOVATION 2026</span>
           </div>
-          <h1 className="text-7xl md:text-8xl font-black text-white mb-8 leading-tight">
+          <h1 className="text-8xl md:text-9xl font-black text-white mb-8 leading-tight">
             THE FUTURE OF<br/>
             <span className="text-[#EEFF00]">DISPENSING</span>
           </h1>
@@ -143,35 +143,35 @@ export function SmartDispenser() {
             </div>
 
             {/* Glass Container */}
-            <div className="flex justify-center mb-12">
-              <div className="relative w-48 h-96">
+            <div className="flex justify-center mb-16">
+              <div className="relative w-64 h-96 mx-auto">
                 {/* Glass Shape - ALWAYS VISIBLE */}
-                <div className="absolute inset-0 rounded-3xl border-4 border-gray-600 bg-gradient-to-b from-white/8 to-black/40 overflow-hidden shadow-2xl backdrop-blur-sm">
+                <div className="absolute inset-0 rounded-3xl border-4 border-gray-500 bg-gradient-to-b from-white/12 to-black/50 overflow-hidden shadow-2xl backdrop-blur-md border-opacity-60">
                   
                   {/* Liquid Fill Animation */}
                   {selectedDrink && (
                     <motion.div
-                      className={`absolute bottom-0 w-full ${liquidColors[selectedDrink]} opacity-75`}
+                      className={`absolute bottom-0 w-full ${liquidColors[selectedDrink]} opacity-80`}
                       initial={{ height: '0%' }}
-                      animate={{ height: isDispensing ? '85%' : '0%' }}
+                      animate={{ height: isDispensing ? '80%' : '0%' }}
                       transition={{ duration: 2.5 }}
                     />
                   )}
 
                   {/* Ice Cubes */}
                   {showIce && isDispensing && (
-                    <div className="absolute inset-0 flex items-center justify-center gap-2">
-                      {[...Array(4)].map((_, i) => (
+                    <div className="absolute inset-0 flex items-center justify-center gap-3">
+                      {[...Array(5)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="w-4 h-4 bg-white/80 rounded-sm"
+                          className="w-5 h-5 bg-white/90 rounded-sm shadow-lg"
                           animate={{
-                            y: [0, 30, 0],
+                            y: [0, 40, 0],
                             rotate: [0, 360],
-                            opacity: [1, 0.6, 1],
+                            opacity: [1, 0.5, 1],
                           }}
                           transition={{
-                            duration: 2,
+                            duration: 2.5,
                             delay: i * 0.2,
                             repeat: Infinity,
                           }}
@@ -183,17 +183,17 @@ export function SmartDispenser() {
                   {/* Lemon Slices */}
                   {showLemon && isDispensing && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      {[...Array(2)].map((_, i) => (
+                      {[...Array(3)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="absolute w-6 h-6 bg-yellow-400 rounded-full border-2 border-yellow-500"
+                          className="absolute w-7 h-7 bg-yellow-400 rounded-full border-2 border-yellow-500 shadow-lg"
                           animate={{
-                            y: [0, 20, 0],
-                            scale: [1, 0.8, 1],
+                            y: [0, 25, 0],
+                            scale: [1, 0.7, 1],
                             rotate: [0, 180, 360],
                           }}
                           transition={{
-                            duration: 2,
+                            duration: 2.5,
                             delay: i * 0.3,
                             repeat: Infinity,
                           }}
