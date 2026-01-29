@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { SmartDispenser } from "../SmartDispenser";
+import Scoreboard from "./components/Scoreboard";
 
 export default function App() {
   const [view, setView] = useState<'summa' | 'dispenser'>('summa');
@@ -23,9 +24,12 @@ export default function App() {
 
       <main className="pt-20">
         {view === 'summa' ? (
-          <div className="text-white text-center mt-20">
-             <h1 className="text-4xl font-black italic uppercase">Summa Padel Scoring</h1>
-             <p className="text-zinc-500 mt-2">Ready to integrate your scoring logic</p>
+          <div className="text-white text-center mt-6">
+            <h1 className="text-4xl font-black italic uppercase">Summa Padel Scoring</h1>
+            <p className="text-zinc-500 mt-2">Ready to integrate your scoring logic</p>
+            <div className="mt-10">
+              <Scoreboard />
+            </div>
           </div>
         ) : (
           <SmartDispenser />
