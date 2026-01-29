@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Trophy, Droplets } from "lucide-react";
+import padel4 from "../../assets/padel4.png";
+import smartImage from "../../assets/smart.jpg";
 
 interface LandingProps {
   onNavigate: (page: 'summa' | 'dispenser') => void;
@@ -80,6 +82,16 @@ export function Landing({ onNavigate }: LandingProps) {
             onClick={() => onNavigate('summa')}
             className="group relative h-[400px] rounded-3xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 hover:border-[#d4ff00] transition-all duration-500 hover:scale-105"
           >
+            {/* Background Image */}
+            <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity duration-500">
+              <img 
+                src={padel4} 
+                alt="Padel" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
+            </div>
+
             {/* Background Glow */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-br from-[#d4ff00]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -149,6 +161,16 @@ export function Landing({ onNavigate }: LandingProps) {
             onClick={() => onNavigate('dispenser')}
             className="group relative h-[400px] rounded-3xl overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 hover:border-[#d4ff00] transition-all duration-500 hover:scale-105"
           >
+            {/* Background Image */}
+            <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity duration-500">
+              <img 
+                src={smartImage} 
+                alt="Smart Dispenser" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
+            </div>
+
             {/* Background Glow */}
             <motion.div
               className="absolute inset-0 bg-gradient-to-br from-[#d4ff00]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
