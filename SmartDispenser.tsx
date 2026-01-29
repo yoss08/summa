@@ -124,8 +124,8 @@ export function SmartDispenser() {
       </section>
 
       {/* Interactive Showcase */}
-      <section id="showcase" className="py-40 px-8">
-        <div className="max-w-4xl mx-auto">
+      <section id="showcase" className="py-40 px-8 min-h-screen flex items-center">
+        <div className="max-w-4xl mx-auto w-full">
           <div className="mb-20">
             <h2 className="text-5xl md:text-6xl font-black text-white mb-2">
               EXPERIENCE <span className="text-[#EEFF00]">ALMUS</span>
@@ -142,18 +142,42 @@ export function SmartDispenser() {
               </h3>
             </div>
 
-            {/* Glass Container */}
-            <div className="flex justify-center mb-16">
-              <div className="relative w-64 h-96 mx-auto">
-                {/* Glass Shape - ALWAYS VISIBLE */}
-                <div className="absolute inset-0 rounded-3xl border-4 border-gray-500 bg-gradient-to-b from-white/12 to-black/50 overflow-hidden shadow-2xl backdrop-blur-md border-opacity-60">
+            {/* Options Buttons */}
+            <div className="flex gap-4 justify-center mb-12">
+              <button
+                onClick={() => setShowIce(!showIce)}
+                className={`px-6 py-3 rounded-full border font-semibold text-sm transition-all ${
+                  showIce
+                    ? 'border-[#EEFF00] text-white bg-white/10'
+                    : 'border-gray-600 text-gray-400 hover:border-gray-500'
+                }`}
+              >
+                ❄️ Ice
+              </button>
+              <button
+                onClick={() => setShowLemon(!showLemon)}
+                className={`px-6 py-3 rounded-full border font-semibold text-sm transition-all ${
+                  showLemon
+                    ? 'border-[#EEFF00] text-white bg-white/10'
+                    : 'border-gray-600 text-gray-400 hover:border-gray-500'
+                }`}
+              >
+                🍋 Lemon
+              </button>
+            </div>
+
+            {/* Glass Container - CENTERED AND VISIBLE */}
+            <div className="flex justify-center mb-16 py-12">
+              <div className="relative w-60 h-80">
+                {/* Glass Shape */}
+                <div className="absolute inset-0 rounded-3xl border-4 border-gray-400 bg-gradient-to-b from-white/15 to-black/60 overflow-hidden shadow-2xl backdrop-blur-md">
                   
                   {/* Liquid Fill Animation */}
                   {selectedDrink && (
                     <motion.div
-                      className={`absolute bottom-0 w-full ${liquidColors[selectedDrink]} opacity-80`}
+                      className={`absolute bottom-0 w-full ${liquidColors[selectedDrink]} opacity-85`}
                       initial={{ height: '0%' }}
-                      animate={{ height: isDispensing ? '80%' : '0%' }}
+                      animate={{ height: isDispensing ? '75%' : '0%' }}
                       transition={{ duration: 2.5 }}
                     />
                   )}
@@ -205,37 +229,13 @@ export function SmartDispenser() {
                   {/* Liquid Stream */}
                   {isDispensing && selectedDrink && (
                     <motion.div
-                      className={`absolute top-0 left-1/2 -translate-x-1/2 w-2 h-40 ${liquidColors[selectedDrink]} opacity-80 rounded-full`}
+                      className={`absolute top-0 left-1/2 -translate-x-1/2 w-2 h-32 ${liquidColors[selectedDrink]} opacity-80 rounded-full`}
                       animate={{ opacity: [0.8, 0.3, 0.8] }}
                       transition={{ duration: 0.6, repeat: Infinity }}
                     />
                   )}
                 </div>
               </div>
-            </div>
-
-            {/* Options Buttons */}
-            <div className="flex gap-4 justify-center mb-10">
-              <button
-                onClick={() => setShowIce(!showIce)}
-                className={`px-6 py-3 rounded-full border font-semibold text-sm transition-all ${
-                  showIce
-                    ? 'border-[#EEFF00] text-white bg-white/10'
-                    : 'border-gray-600 text-gray-400 hover:border-gray-500'
-                }`}
-              >
-                ❄️ Ice
-              </button>
-              <button
-                onClick={() => setShowLemon(!showLemon)}
-                className={`px-6 py-3 rounded-full border font-semibold text-sm transition-all ${
-                  showLemon
-                    ? 'border-[#EEFF00] text-white bg-white/10'
-                    : 'border-gray-600 text-gray-400 hover:border-gray-500'
-                }`}
-              >
-                🍋 Lemon
-              </button>
             </div>
 
             {/* Drink Selection Menu */}
@@ -329,16 +329,25 @@ export function SmartDispenser() {
             <button
               onClick={handleDispense}
               disabled={!selectedDrink || isDispensing}
-              className="w-full py-4 rounded-2xl bg-[#EEFF00] text-black font-black text-lg hover:bg-[#d4ff00] transition disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest shadow-lg"
+              className="w-full py-5 rounded-2xl bg-gradient-to-r from-[#EEFF00] via-[#d4ff00] to-[#EEFF00] text-black font-black text-xl hover:shadow-2xl hover:shadow-[#EEFF00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest shadow-lg hover:scale-105 duration-300"
             >
-              {isDispensing ? 'DISPENSING...' : 'DISPENSE'}
+              {isDispensing ? (
+                <motion.span
+                  animate={{ opacity: [1, 0.5, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  DISPENSING...
+                </motion.span>
+              ) : (
+                <span>DISPENSE ✨</span>
+              )}
             </button>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 px-8 bg-[#EEFF00]">
+      <section className="py-48 px-8 bg-[#EEFF00] mt-32">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-6xl md:text-7xl font-black text-black mb-8 leading-tight">
             INNOVATION<br/>MEETS DESIGN
