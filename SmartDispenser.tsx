@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Droplet, Snowflake, Citrus, ChevronLeft, Wine } from 'lucide-react';
 
+// --- Soda Logos (Local Assets) ---
 import cocaColaLogo from './assets/KO.png';
 import fantaLogo from './assets/fanta.png';
 import spriteLogo from './assets/sprite.png';
+
+// --- Jus Logos ---
 import cassiseLogo from './assets/cassiseLogo.png';
 import pechePassionLogo from './assets/pechePassionLogo.png';
 import pastequeLogo from './assets/pastequeLogo.png';
@@ -22,14 +25,14 @@ interface BeverageConfig {
 }
 
 const beverageConfigs: Record<Exclude<BeverageType, null>, BeverageConfig> = {
-  water: { name: 'Water', liquidGradient: 'bg-gradient-to-b from-cyan-300/70 to-blue-400/80', shadowColor: '0 0 30px rgba(6, 182, 212, 0.6)', streamGradient: 'linear-gradient(to bottom, rgba(100, 210, 255, 0.95), rgba(34, 150, 243, 0.7))', hasBubbles: false },
-  coca: { name: 'Coca Cola', logo: cocaColaLogo, liquidGradient: 'bg-gradient-to-b from-amber-800 to-amber-950', shadowColor: '0 0 30px rgba(78, 22, 6, 0.8)', streamGradient: 'linear-gradient(to bottom, rgba(92, 35, 10, 0.95), rgba(55, 18, 5, 0.8))', hasBubbles: true },
-  fanta: { name: 'Fanta', logo: fantaLogo, liquidGradient: 'bg-gradient-to-b from-orange-500 to-orange-700', shadowColor: '0 0 30px rgba(249, 115, 22, 0.7)', streamGradient: 'linear-gradient(to bottom, rgba(255, 140, 40, 0.95), rgba(220, 85, 15, 0.8))', hasBubbles: true },
-  sprite: { name: 'Sprite', logo: spriteLogo, liquidGradient: 'bg-gradient-to-b from-lime-300 to-yellow-300', shadowColor: '0 0 30px rgba(132, 204, 22, 0.6)', streamGradient: 'linear-gradient(to bottom, rgba(190, 242, 100, 0.95), rgba(150, 200, 50, 0.8))', hasBubbles: true },
-  cassise: { name: 'Cassise', logo: cassiseLogo, liquidGradient: 'bg-gradient-to-b from-purple-700 to-purple-900', shadowColor: '0 0 30px rgba(109, 40, 217, 0.7)', streamGradient: 'linear-gradient(to bottom, rgba(147, 51, 234, 0.95), rgba(88, 28, 135, 0.8))', hasBubbles: false },
-  peche_passion: { name: 'Pêche & Passion', logo: pechePassionLogo, liquidGradient: 'bg-gradient-to-b from-orange-400 to-yellow-500', shadowColor: '0 0 30px rgba(249, 115, 22, 0.6)', streamGradient: 'linear-gradient(to bottom, rgba(255, 155, 70, 0.95), rgba(255, 188, 80, 0.8))', hasBubbles: false },
-  pasteque: { name: 'Pastèque', logo: pastequeLogo, liquidGradient: 'bg-gradient-to-b from-red-600 to-red-800', shadowColor: '0 0 30px rgba(220, 38, 38, 0.7)', streamGradient: 'linear-gradient(to bottom, rgba(239, 68, 68, 0.95), rgba(185, 28, 28, 0.8))', hasBubbles: false },
-  citron_jus: { name: 'Citron / Citron Vert', logo: citronLogo, liquidGradient: 'bg-gradient-to-b from-lime-400 to-yellow-400', shadowColor: '0 0 30px rgba(101, 163, 13, 0.7)', streamGradient: 'linear-gradient(to bottom, rgba(190, 242, 100, 0.95), rgba(234, 179, 8, 0.8))', hasBubbles: false },
+  water: { name: 'Water', liquidGradient: 'bg-gradient-to-t from-cyan-400/80 to-blue-300/60', shadowColor: '0 0 20px rgba(6, 182, 212, 0.4)', streamGradient: 'linear-gradient(to bottom, rgba(34, 211, 238, 0.9), rgba(34, 211, 238, 0.3))', hasBubbles: false },
+  coca: { name: 'Coca Cola', logo: cocaColaLogo, liquidGradient: 'bg-gradient-to-t from-amber-950 to-amber-900', shadowColor: '0 0 20px rgba(120, 53, 15, 0.6)', streamGradient: 'linear-gradient(to bottom, rgba(120, 53, 15, 0.9), rgba(120, 53, 15, 0.3))', hasBubbles: true },
+  fanta: { name: 'Fanta', logo: fantaLogo, liquidGradient: 'bg-gradient-to-t from-orange-600 to-orange-400', shadowColor: '0 0 20px rgba(249, 115, 22, 0.5)', streamGradient: 'linear-gradient(to bottom, rgba(249, 115, 22, 0.9), rgba(249, 115, 22, 0.3))', hasBubbles: true },
+  sprite: { name: 'Sprite', logo: spriteLogo, liquidGradient: 'bg-gradient-to-t from-lime-300/70 to-lime-200/50', shadowColor: '0 0 20px rgba(132, 204, 22, 0.4)', streamGradient: 'linear-gradient(to bottom, rgba(190, 242, 100, 0.9), rgba(190, 242, 100, 0.3))', hasBubbles: true },
+  cassise: { name: 'Cassise', logo: cassiseLogo, liquidGradient: 'bg-gradient-to-t from-purple-900 to-purple-600', shadowColor: '0 0 20px rgba(147, 51, 234, 0.5)', streamGradient: 'linear-gradient(to bottom, #7e22ce, #a855f7)', hasBubbles: false },
+  peche_passion: { name: 'Pêche & Passion', logo: pechePassionLogo, liquidGradient: 'bg-gradient-to-t from-orange-500 to-yellow-400', shadowColor: '0 0 20px rgba(249, 115, 22, 0.4)', streamGradient: 'linear-gradient(to bottom, #f97316, #fbbf24)', hasBubbles: false },
+  pasteque: { name: 'Pastèque', logo: pastequeLogo, liquidGradient: 'bg-gradient-to-t from-red-600 to-pink-400', shadowColor: '0 0 20px rgba(220, 38, 38, 0.4)', streamGradient: 'linear-gradient(to bottom, #dc2626, #f87171)', hasBubbles: false },
+  citron_jus: { name: 'Citron / Citron Vert', logo: citronLogo, liquidGradient: 'bg-gradient-to-t from-lime-500 to-yellow-300', shadowColor: '0 0 20px rgba(101, 163, 13, 0.4)', streamGradient: 'linear-gradient(to bottom, #65a30d, #bef264)', hasBubbles: false },
 };
 
 interface IceCube { id: number; delay: number; x: number; y: number; rotation: number; size: number; }
@@ -132,7 +135,7 @@ export function SmartDispenser() {
             </motion.div>
           ) : (
             <motion.div key="sub" className="space-y-4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-              <button onClick={() => setMenuView('main')} className="text-[#d4ff00] text-xs font-bold uppercase flex items-center gap-1"><ChevronLeft size={14}/> Back</button>
+              <button onClick={() => setMenuView('main')} className="text-[#d4ff00] flex items-center gap-2 text-xs uppercase font-bold tracking-widest"><ChevronLeft size={16}/> Back</button>
               <div className="grid grid-cols-4 gap-4">
                 {menuView === 'soda' ? (
                   <>
@@ -143,7 +146,7 @@ export function SmartDispenser() {
                 ) : (
                   <>
                     <FlavorCard img={cassiseLogo} label="Cassise" onClick={() => handleDispense('cassise')} />
-                    <FlavorCard img={pechePassionLogo} label="Pêche" onClick={() => handleDispense('peche_passion')} />
+                    <FlavorCard img={pechePassionLogo} label="Pêche & Passion" onClick={() => handleDispense('peche_passion')} />
                     <FlavorCard img={pastequeLogo} label="Pastèque" onClick={() => handleDispense('pasteque')} />
                     <FlavorCard img={citronLogo} label="Citron" onClick={() => handleDispense('citron_jus')} />
                   </>
