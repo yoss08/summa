@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Landing } from "./components/Landing";
+import { UltimaLanding } from "./components/UltimaLanding";
 import { SmartDispenser } from "../SmartDispenser";
 import { Summa } from "./components/Summa";
 import { Hero } from "./components/Hero";
@@ -228,5 +229,5 @@ export default function App() {
     return <Summa onBack={() => setCurrentPage('landing')} />;
   }
 
-  return <Landing onNavigate={(page) => setCurrentPage(page)} />;
+  return <UltimaLanding onNavigate={(page) => setCurrentPage(page === 'dispenser' ? 'dispenser' : 'summa')} />;
 }
