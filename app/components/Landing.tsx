@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { ArrowRight, Trophy, Droplets } from 'lucide-react';
 import { motion } from 'framer-motion';
 import padel4 from '../../assets/padel4.jpg';
@@ -8,7 +8,7 @@ interface LandingProps {
   onNavigate: (page: 'summa' | 'dispenser') => void;
 }
 
-export function Landing({ onNavigate }: LandingProps) {
+export function Landing({ onNavigate }: LandingProps): JSX.Element {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8">
       {/* ULTIMA Logo */}

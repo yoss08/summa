@@ -3,10 +3,6 @@ import { Landing } from "./components/Landing";
 import { UltimaLanding } from "./components/UltimaLanding";
 import { SmartDispenser } from "../SmartDispenser";
 import { Summa } from "./components/Summa";
-import { Hero } from "./components/Hero";
-import { Features } from "./components/Features";
-import Scoreboard from "./components/Scoreboard";
-import { CTASection } from "./components/CTASection";
 import { useState, useEffect } from "react"; 
 import { supabase } from "./lib/supabaseClient";
 import { Sidebar } from "./components/Sidebar";
@@ -57,17 +53,13 @@ useEffect(() => {
       <div className="flex min-h-screen bg-black text-white">
         {/* Sidebar : On garde la navigation latérale */}
         <Sidebar 
-          activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
-          onLogout={async () => {
-            // Ajout de l'alerte de sécurité
-            if (window.confirm("Are you sure you want to logout?")) {
-              await supabase.auth.signOut();
-              setCurrentPage('landing');
-            }
-          }} 
-          goToSumma={() => setCurrentPage('summa')}
-        />
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        onLogout={() => {
+        setCurrentPage('summa');
+     }} 
+  goToSumma={() => setCurrentPage('summa')}
+/>
         
         <div className="flex-1 relative flex flex-col overflow-hidden">
           {/* 1. Header du nouveau Dashboard (UserNav) */}
