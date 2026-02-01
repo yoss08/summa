@@ -55,7 +55,7 @@ useEffect(() => {
         <div 
         className="absolute inset-0 z-0 pointer-events-none opacity-60" 
         style={{
-          backgroundImage: 'url("./padel4.jpg")', // Assure-toi que le nom correspond
+          backgroundImage: 'url("padel4.jpg")', // Assure-toi que le nom correspond
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed' // L'image reste fixe au scroll
