@@ -55,7 +55,7 @@ useEffect(() => {
         <div 
         className="absolute inset-0 z-0 pointer-events-none opacity-60" 
         style={{
-          backgroundImage: 'url("/padel4.jpg")', 
+          backgroundImage: 'url("https://i.postimg.cc/L83gSn5S/bg.jpg")', 
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed' 
