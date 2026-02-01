@@ -13,6 +13,7 @@ import { UserNav } from './components/UserNav';
 import { MyMatches } from "./components/MyMatches";
 import Dashboard from './components/Dashboard';
 
+
 export default function App(): React.ReactNode {
   const [currentPage, setCurrentPage] = useState<'landing' | 'summa' | 'dispenser' | 'dashboard' | 'login'>('landing');
   const [activeTab, setActiveTab] = useState('overview');
@@ -50,14 +51,26 @@ useEffect(() => {
 
   if (currentPage === 'dashboard') {
     return (
-      <div className="flex min-h-screen bg-black text-white">
+      <div className="flex min-h-screen bg-black text-white relative ">
+        <div 
+        className="absolute inset-0 z-0 pointer-events-none opacity-60" 
+        style={{
+          backgroundImage: 'url("/padel4.jpg")', // Assure-toi que le nom correspond
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed' // L'image reste fixe au scroll
+        }}
+      />
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-black via-black/80 to-transparent pointer-events-none" />
+       <div className="flex w-full z-10 relative">
+        
         {/* Sidebar : On garde la navigation latérale */}
         <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         onLogout={() => {
         setCurrentPage('summa');
-     }} 
+  }} 
   goToSumma={() => setCurrentPage('summa')}
 />
         
@@ -90,6 +103,7 @@ useEffect(() => {
             </div>
           </main>
         </div>
+      </div>
       </div>
     );
 }
