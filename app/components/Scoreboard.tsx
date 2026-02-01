@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 
 type TeamState = {
   points: number; // 0..3 where 0=>0,1=>15,2=>30,3=>40
@@ -22,7 +22,7 @@ function clone(s: Snapshot): Snapshot {
   };
 }
 
-export default function Scoreboard() {
+export default function Scoreboard(): JSX.Element {
   const initial: Snapshot = {
     teamA: { points: 0, games: 0, sets: 0 },
     teamB: { points: 0, games: 0, sets: 0 },

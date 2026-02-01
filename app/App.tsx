@@ -15,31 +15,37 @@ import { BookingPage } from './components/Bookingpage';
 import Auth from "./pages/Auth";
 import { UserNav } from './components/UserNav';
 import { MyMatches } from "./components/MyMatches";
+import Dashboard from './components/Dashboard';
 
 export default function App(): React.ReactNode {
   const [currentPage, setCurrentPage] = useState<'landing' | 'summa' | 'dispenser' | 'dashboard' | 'login'>('landing');
   const [activeTab, setActiveTab] = useState('overview');
 
-  useEffect(() => {
-    // 1. Vérifier la session actuelle au démarrage
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) setCurrentPage('dashboard');
-    };
-    checkSession();
+useEffect(() => {
+  const checkSession = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      setCurrentPage('dashboard');
+    } else {
+      setCurrentPage('landing');
+    }
+  };
+  checkSession();
 
-    // 2. Écouter les changements d'état (Connexion/Déconnexion)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        setCurrentPage('dashboard');
-      }
-      if (event === 'SIGNED_OUT') {
-        setCurrentPage('landing');
-      }
-    });
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      setCurrentPage('dashboard');
+      // On s'assure de revenir sur l'overview lors d'une nouvelle connexion
+      setActiveTab('overview'); 
+    }
+    if (event === 'SIGNED_OUT') {
+      setCurrentPage('landing');
+      setActiveTab('overview');
+    }
+  });
 
-    return () => subscription.unsubscribe();
-  }, []);
+  return () => subscription.unsubscribe();
+}, []);
 
   // Logique d'affichage
   if (currentPage === 'login') {
@@ -47,48 +53,53 @@ export default function App(): React.ReactNode {
   }
 
   if (currentPage === 'dashboard') {
-  return (
-  <div className="flex min-h-screen bg-black text-white">
-    {/* Sidebar reste inchangée */}
-    <Sidebar 
-      activeTab={activeTab} 
-      setActiveTab={setActiveTab} 
-      onLogout={() => setCurrentPage('landing')} 
-      goToSumma={() => setCurrentPage('summa')}
-    />
-    
-    {/* On ajoute 'relative flex flex-col' pour positionner UserNav correctement */}
-    <div className="flex-1 relative flex flex-col overflow-hidden">
-      
-      {/* 1. AJOUT DU USERNAV ICI */}
-      <UserNav /> 
-
-      {/* 2. AJOUT DE mt-16 POUR NE PAS QUE LE CONTENU SOIT SOUS LE USERNAV */}
-      <main className="flex-1 p-10 mt-16 bg-[#050505] overflow-y-auto">
+    return (
+      <div className="flex min-h-screen bg-black text-white">
+        {/* Sidebar : On garde la navigation latérale */}
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          onLogout={async () => {
+            // Ajout de l'alerte de sécurité
+            if (window.confirm("Are you sure you want to logout?")) {
+              await supabase.auth.signOut();
+              setCurrentPage('landing');
+            }
+          }} 
+          goToSumma={() => setCurrentPage('summa')}
+        />
         
-        {/* CONDITION D'AFFICHAGE DYNAMIQUE */}
-        {activeTab === 'overview' && (
-          <div className="animate-in fade-in duration-500">
-            <h1 className="text-3xl font-black uppercase">
-              WELCOME TO YOUR <span className="text-[#EEFF00]">DASHBOARD</span>
-            </h1>
-            <p className="text-zinc-500 mt-2">You have now successfully logged in.</p>
-          </div>
-        )}
+        <div className="flex-1 relative flex flex-col overflow-hidden">
+          {/* 1. Header du nouveau Dashboard (UserNav) */}
+          <UserNav onNavigate={(tab) => setActiveTab(tab)}
+                    /> 
 
-        {activeTab === 'profile' && <UserProfile />}
-        
-        {/* On remplace le titre statique par ton composant complet */}
-        {activeTab === 'matches' && <MyMatches/>}
+          {/* 2. Zone de contenu dynamique */}
+          <main className="flex-1 overflow-y-auto">
+            
+            {/* Si l'onglet est 'overview', on affiche ton NOUVEAU design Dashboard */}
+            {activeTab === 'overview' && (
+              <Dashboard onNavigate={(tab) => setActiveTab(tab)}
+                onLogoClick={() => setCurrentPage('summa')}
+               />
+            )}
 
-        {activeTab === 'booking' && <BookingPage  />}
-
-        {/* Optionnel : Settings */}
-        {activeTab === 'settings' && <div className="text-zinc-500 font-bold uppercase tracking-widest p-20">Settings coming soon...</div>}
-      </main>
-    </div>
-  </div>
-);
+            {/* Pour les autres onglets, on utilise un container avec padding (mt-16 pour UserNav) */}
+            <div className={activeTab === 'overview' ? "" : "p-10 mt-16"}>
+              {activeTab === 'profile' && <UserProfile />}
+              {activeTab === 'matches' && <MyMatches />}
+              {activeTab === 'booking' && <BookingPage />}
+              
+              {activeTab === 'settings' && (
+                <div className="text-zinc-500 font-bold uppercase tracking-widest p-20">
+                  Settings coming soon...
+                </div>
+              )}
+            </div>
+          </main>
+        </div>
+      </div>
+    );
 }
  if (currentPage === 'landing') {
   return (

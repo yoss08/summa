@@ -11,8 +11,11 @@ interface Match {
     type: string;
   };
 }
+interface MyMatchesProps {
+  setActiveTab?: (tab: string) => void;
+}
 
-export const MyMatches: React.FC = () => {
+export const MyMatches: React.FC<MyMatchesProps> = ({ setActiveTab }) => {
   const [matches, setMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'upcoming' | 'past'>('upcoming');
@@ -176,7 +179,7 @@ export const MyMatches: React.FC = () => {
             AUCUN MATCH TROUVÉ
           </p>
           {filter === 'upcoming' && (
-            <button className="mt-6 px-8 py-3 bg-white text-black text-xs font-black rounded-xl hover:bg-[#EEFF00] transition-colors uppercase tracking-widest">
+            <button onClick={() => setActiveTab?.('booking')} className="mt-6 px-8 py-3 bg-white text-black text-xs font-black rounded-xl hover:bg-[#EEFF00] transition-colors uppercase tracking-widest">
               Réserver une piste
             </button>
           )}
